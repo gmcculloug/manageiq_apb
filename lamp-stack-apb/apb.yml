@@ -1,14 +1,14 @@
 ---
 version: 1.0
 name: lamp-stack-apb
-description: No description provided
+description: LAMP Stack Service
 bindable: false
 async: optional
 alpha:
   dashboard_redirect: true
 metadata:
   displayName: LAMP-Stack (APB)
-  imageUrl: https://10.8.99.142/pictures/2.jpg
+  imageUrl: https://10.8.198.132/pictures/2.png
 plans:
 - name: default
   description: This is a sample plan

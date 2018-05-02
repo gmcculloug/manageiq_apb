@@ -8,7 +8,7 @@ alpha:
   dashboard_redirect: true
 metadata:
   displayName: Hadoop-Cluster (APB)
-  imageUrl: https://10.8.99.142/pictures/1.png
+  imageUrl: https://10.8.198.132/pictures/1.png
 plans:
 - name: platinum
   description: Platinum Plan
