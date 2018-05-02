@@ -1,0 +1,9 @@
+plan_name: Custom
+provisioned_storage: 20
+plan_description: Custom Plan
+plan_long_description: This is the Custom Plan
+plan_display_name: This is the Custom Plan
+plan_cost: 50.0
+option_0_cores_per_socket: 2
+option_0_vm_memory: 4
+option_0_number_of_sockets: 1

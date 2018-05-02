@@ -1,0 +1,68 @@
+---
+version: 1.0
+name: lamp-stack-apb
+description: No description provided
+bindable: false
+async: optional
+alpha:
+  dashboard_redirect: true
+metadata:
+  displayName: LAMP-Stack (APB)
+  imageUrl: https://10.8.99.142/pictures/2.jpg
+plans:
+- name: default
+  description: This is a sample plan
+  free: false
+  metadata:
+    displayName: default
+    longDescription: This is a sample plan
+    cost: 0.0
+  parameters:
+  - title: CFME Requester
+    name: cfme_user
+    type: string
+    required: true
+    display_group: CloudForms Credentials
+  - title: CFME Password
+    name: cfme_password
+    type: string
+    display_type: password
+    required: true
+    display_group: CloudForms Credentials
+  - name: text_box_1
+    title: Database Username
+    default: mysqladmin
+    display_group: Info/Database
+    type: string
+    required: false
+  - name: text_box_2
+    title: Database Password
+    default: smartvm
+    display_group: Info/Database
+    type: string
+    required: false
+    display_type: password
+  - name: text_box_3
+    title: Name
+    default: Web_Server_1
+    display_group: Info/Web Server
+    type: string
+    required: false
+  - name: check_box_1_1
+    title: PHP
+    default: true
+    display_group: Info/Web Server
+    type: boolean
+    required: false
+  - name: check_box_1
+    title: SSL
+    default: true
+    display_group: Info/Web Server
+    type: boolean
+    required: false
+  - name: text_box_4
+    title: Listen Address
+    default: 0.0.0.0:80
+    display_group: Info/Web Server
+    type: string
+    required: false

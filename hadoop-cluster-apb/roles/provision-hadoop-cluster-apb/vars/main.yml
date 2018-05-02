@@ -1,0 +1,21 @@
+---
+manageiq:
+  api_url: https://10.8.99.142/api
+  cfme_console_url: https://10.8.99.142
+  max_retries: 200
+  quota_check: false
+  service_name: Hadoop-Cluster
+  retry_interval: 60
+  service_catalog_href: https://10.8.99.142/api/service_catalogs/1/service_templates
+  href: https://10.8.99.142/api/service_templates/1
+  enum_map:
+    option_0_number_of_vms:
+      "<None>": 
+      '1': '1'
+      '2': '2'
+      '3': '3'
+      '4': '4'
+      '5': '5'
+      '6': '6'
+      '7': '7'
+      '8': '8'

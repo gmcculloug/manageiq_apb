@@ -1,0 +1,8 @@
+---
+manageiq:
+  api_url: https://10.8.99.142/api
+  cfme_console_url: https://10.8.99.142
+  max_retries: 200
+  quota_check: false
+  service_name: LAMP-Stack
+  retry_interval: 60

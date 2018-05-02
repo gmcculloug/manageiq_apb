@@ -1,0 +1,74 @@
+---
+- name: Fetch the Service URL
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}"
+  register: config
+- debug: var=config
+- name: CloudForms Retirement Task
+  uri:
+    url: "{{ manageiq.api_url }}/services"
+    user: "{{ config.config_map.data.cfmeUser }}"
+    password: "{{ config.config_map.data.cfmePassword }}"
+    force_basic_auth: true
+    method: POST
+    validate_certs: false
+    headers:
+      Content-Type: application/json
+    body_format: json
+    body:
+      action: retire
+      resource:
+        href: "{{ config.config_map.data.cfmeServiceHref }}"
+    return_content: true
+  register: output
+- debug: var=output
+- name: Fetch the Quota Config Map
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: redhat-quota
+  register: redhat_quota
+- debug: var=redhat_quota
+- set_fact:
+    quota: "{{ redhat_quota.config_map.data.quota | from_yaml }}"
+- debug: var=quota
+- name: Fetch the service status
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}-status"
+  register: redhat_status
+- debug: var=redhat_status
+- set_fact:
+    svc_status: "{{ redhat_status.config_map.data.status | from_yaml }}"
+- name: Create the Updated Quota after retirement has been queued
+  set_fact:
+    updated_quota:
+      allocated_budget: "{{ quota.allocated_budget }}"
+      allocated_cpus: "{{ quota.allocated_cpus }}"
+      allocated_memory_gb: "{{ quota.allocated_memory_gb }}"
+      allocated_storage_gb: "{{ quota.allocated_storage_gb }}"
+      allocated_vms: "{{ quota.allocated_vms }}"
+      used_budget: "{{ (quota.used_budget|float - svc_status.requested_budget|float)
+        | float }}"
+      used_cpus: "{{ (quota.used_cpus|int - svc_status.requested_cpus|int) | int }}"
+      used_memory_gb: "{{ (quota.used_memory_gb|int - svc_status.requested_memory_gb|int)
+        | int }}"
+      used_storage_gb: "{{ (quota.used_storage_gb|int - svc_status.requested_storage_gb|int)
+        | int }}"
+      used_vms: "{{ (quota.used_vms|int - svc_status.requested_vms|int) | int }}"
+- name: Save the updated quota
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: redhat-quota
+    data:
+      quota: "{{ updated_quota | to_nice_yaml }}"
+- name: Delete the Config Map
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}"
+    state: absent
+- name: Delete the Status Config Map
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}-status"
+    state: absent

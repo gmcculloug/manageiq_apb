@@ -1,0 +1,104 @@
+---
+- debug: var=manageiq.href
+- name: Load a variable file based on the selected plan
+  include_vars:
+    file: "{{ _apb_plan_id }}.yml"
+- include_tasks: approval.yml
+- name: CloudForms Provisioning Task
+  uri:
+    url: "{{ manageiq.service_catalog_href }}"
+    user: "{{ cfme_user }}"
+    password: "{{ cfme_password }}"
+    force_basic_auth: true
+    method: POST
+    validate_certs: false
+    headers:
+      Content-Type: application/json
+    body_format: json
+    body:
+      action: order
+      resource:
+        href: "{{ manageiq.href }}"
+        text_box_1: "{{ text_box_1 }}"
+        check_box_1: "{{ check_box_1 }}"
+        option_0_number_of_vms: "{{ [option_0_number_of_vms]|map('extract',manageiq.enum_map.option_0_number_of_vms)|list|first
+          }}"
+        text_box_2: "{{ text_box_2 }}"
+        text_box_3: "{{ text_box_3 }}"
+        text_box_4: "{{ text_box_4 }}"
+        text_box_5_1: "{{ text_box_5_1 }}"
+    return_content: true
+  register: output
+- debug: var=output
+- name: set the request href
+  set_fact:
+    request_url: "{{ output.json.results[0].href }}"
+- debug: var=request_url
+- name: Set the service request task_href
+  set_fact:
+    service_request_task_url: "{{ request_url }}/request_tasks?filter[]=type=ServiceTemplateProvisionTask&expand=resources"
+- debug: var=service_request_task_url
+- name: Wait for the provisioning request to end
+  uri:
+    url: "{{ request_url }}"
+    method: GET
+    user: "{{ cfme_user }}"
+    password: "{{ cfme_password }}"
+    force_basic_auth: true
+    validate_certs: false
+    headers:
+      Content-Type: application/json
+    status_code: 200
+  register: request_result
+  until: request_result.json.request_state == 'finished' or request_result.json.status
+    == 'Error'
+  retries: "{{ manageiq.max_retries }}"
+  delay: "{{ manageiq.retry_interval }}"
+- debug: var=request_result
+- name: Create the error file
+  lineinfile:
+    line: "{{ request_result.json.message }}"
+    path: "/dev/termination-log"
+    unsafe_writes: true
+  when: request_result.json.status == 'Error'
+- name: Fail the provision task
+  fail:
+    msg: "{{ request_result.json.message }}"
+  when: request_result.json.status == 'Error'
+- name: CloudForms Service Request Task
+  uri:
+    url: "{{ service_request_task_url }}"
+    user: "{{ cfme_user }}"
+    password: "{{ cfme_password }}"
+    force_basic_auth: true
+    method: GET
+    validate_certs: false
+    headers:
+      Content-Type: application/json
+    body_format: json
+    status_code: 200
+  register: request_task_output
+  when:
+  - request_result.json.status == 'Ok'
+- debug: var=request_task_output
+- name: set the service_url
+  set_fact:
+    service_url: "{{ manageiq.api_url }}/services/{{ request_task_output.json.resources[0].destination_id
+      }}"
+- debug: var=service_url
+- name: Save the Service URL
+  k8s_v1_config_map:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}"
+    data:
+      cfmeServiceHref: "{{ service_url }}"
+      cfmeUser: "{{ cfme_user }}"
+      cfmePassword: "{{ cfme_password }}"
+- name: set the console service_url
+  set_fact:
+    dashboard_service_url: "{{ manageiq.cfme_console_url }}/service/show/{{ request_task_output.json.resources[0].destination_id
+      }}"
+- debug: var=dashboard_service_url
+- name: Set the dashboard url
+  asb_dashboard_url:
+    dashboard_url: "{{ dashboard_service_url }}"

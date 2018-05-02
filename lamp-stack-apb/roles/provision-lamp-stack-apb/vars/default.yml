@@ -1,0 +1,7 @@
+provisioned_storage: 20
+plan_description: This is a sample plan
+plan_cost: 0.0
+option_0_cores_per_socket: 2
+option_0_number_of_vms: 1
+option_0_vm_memory: 4
+option_0_number_of_sockets: 1

@@ -1,0 +1,139 @@
+---
+version: 1.0
+name: hadoop-cluster-apb
+description: Hadoop Cluster Service
+bindable: false
+async: optional
+alpha:
+  dashboard_redirect: true
+metadata:
+  displayName: Hadoop-Cluster (APB)
+  imageUrl: https://10.8.99.142/pictures/1.png
+plans:
+- name: platinum
+  description: Platinum Plan
+  free: false
+  metadata:
+    displayName: This is the Platinum Plan - 7 Data Nodes, 1 Job Tracker
+    longDescription: This is the Platinum Plan - 7 Data Nodes, 1 Job Tracker
+    cost: 9.99
+  parameters:
+  - &1
+    title: CFME Requester
+    name: cfme_user
+    type: string
+    required: true
+    display_group: CloudForms Credentials
+  - &2
+    title: CFME Password
+    name: cfme_password
+    type: string
+    display_type: password
+    required: true
+    display_group: CloudForms Credentials
+  - &3
+    name: text_box_1
+    title: Job Tracker Name
+    default: dfs.namenode.name.dir
+    display_group: Info/Job Tracker
+    type: string
+    required: false
+  - &4
+    name: check_box_1
+    title: Use YARN
+    default: true
+    display_group: Info/Job Tracker
+    type: boolean
+    required: false
+  - &5
+    name: text_box_2
+    title: Name Prefix
+    default: dfs.datanode[x].data.dir
+    display_group: Info/Data Node(s)
+    type: string
+    required: false
+  - &6
+    name: text_box_3
+    title: Resource Memory MB
+    default: '1536'
+    display_group: Info/Data Node(s)
+    type: string
+    required: false
+  - &7
+    name: text_box_4
+    title: Scheduler Minimum Allocation MB
+    default: '128'
+    display_group: Info/Data Node(s)
+    type: string
+    required: false
+  - &8
+    name: text_box_5_1
+    title: Scheduler Maximum Allocation MB
+    default: '1536'
+    display_group: Info/Data Node(s)
+    type: string
+    required: false
+- name: gold
+  description: Gold Plan
+  free: false
+  metadata:
+    displayName: This is the Gold Plan - 5 Data Nodes, 1 Job Tracker
+    longDescription: This is the Gold Plan - 5 Data Nodes, 1 Job Tracker
+    cost: 5.99
+  parameters:
+  - *1
+  - *2
+  - *3
+  - *4
+  - *5
+  - *6
+  - *7
+  - *8
+- name: silver
+  description: Silver Plan
+  free: false
+  metadata:
+    displayName: This is the Silver Plan - 3 Data Nodes, 1 Job Tracker
+    longDescription: This is the Silver Plan - 3 Data Nodes, 1 Job Tracker
+    cost: 1.99
+  parameters:
+  - *1
+  - *2
+  - *3
+  - *4
+  - *5
+  - *6
+  - *7
+  - *8
+- name: custom
+  description: Custom Plan
+  free: false
+  metadata:
+    displayName: This is the Custom Plan
+    longDescription: This is the Custom Plan
+    cost: 50.0
+  parameters:
+  - *1
+  - *2
+  - *3
+  - *4
+  - name: option_0_number_of_vms
+    title: Data Node Count
+    default: 3
+    display_group: Info/Data Node(s)
+    type: enum
+    required: false
+    enum:
+    - "<None>"
+    - '1'
+    - '2'
+    - '3'
+    - '4'
+    - '5'
+    - '6'
+    - '7'
+    - '8'
+  - *5
+  - *6
+  - *7
+  - *8
