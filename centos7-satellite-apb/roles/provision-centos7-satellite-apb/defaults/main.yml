@@ -1,0 +1,8 @@
+  api_url: "https://10.9.62.106/api/v2/"
+  discovered_hosts: "{{ api_url }}discovered_hosts"
+  auto_provision: "{{ discovered_hosts }}/auto_provision/" 
+  host_group_search_url: "{{ api_url }}hostgroups"
+  search_url: "?search="
+  disk_size: "disks_size>{{ min_disks_size }}"
+  memory: "memory>{{ min_memory }}"
+  cpu_count: "cpu_count={{min_cpu}}"

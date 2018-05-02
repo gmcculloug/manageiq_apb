@@ -1,0 +1,38 @@
+---
+- hosts: all
+  gather_facts: false
+  connection: local
+
+
+  vars:
+      inventory_hostname: "PXEhost1"
+      datacenter: "Datacenter"
+      esxi_host: "10.9.62.5"
+      vcenter_hostname: "10.9.62.70"
+      vc_username: "administrator@vsphere.local"
+      vc_password: "Redhat1!"  
+ 
+  tasks:
+    - name: Delete Virtual Machine
+      vsphere_guest:
+        validate_certs: no
+        vcenter_hostname: "{{ vcenter_hostname }}"
+        guest: "PXEhost3"
+        username: "{{vc_username}}"
+        password: "{{vc_password}}"  
+        force: yes
+        state: absent
+
+    - name: Create Virtual Machines
+      vsphere_guest:
+        validate_certs: no
+        vcenter_hostname: "{{ vcenter_hostname }}"
+        guest: "PXEhost3"
+        power_on_after_clone: yes
+        username: "{{vc_username}}"
+        password: "{{vc_password}}"  
+        from_template: yes
+        template_src: "PXEBase3"
+        esxi:
+          datacenter: "{{ datacenter }}"
+          hostname: "{{ esxi_host }}"

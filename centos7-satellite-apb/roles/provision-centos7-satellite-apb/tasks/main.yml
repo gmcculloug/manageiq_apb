@@ -1,0 +1,95 @@
+    - name: "Append Search URL for Disk Size"
+      set_fact: search_url="{{ search_url }}{{disk_size}}"
+      when: (min_disks_size != "")
+
+    - name: "Append a Plus"
+      set_fact: search_url="{{ search_url }}+"
+      when: (min_disks_size != "") and (min_memory != "")
+
+    - name: "Append Search URL for Memory Size"
+      set_fact: search_url="{{ search_url }}{{memory}}"
+      when: (min_memory != "")
+    
+
+      set_fact: search_url="{{ search_url }}{{memory}}+{{cpu_count}}+{{disk_size}}"
+    
+    - debug: var=search_url
+
+    - name: Call to Satellite to find a host that matches SPEC
+      uri:
+        url: "{{ discovered_hosts }}{{ search_url }}"
+        user: "{{ satellite_user }}"
+        password: "{{ satellite_password }}"
+        force_basic_auth: yes
+        method: GET
+        validate_certs: no
+        headers:
+           Content-Type: "application/json"
+        HEADER_Content-Type: "application/json"
+        return_content: yes
+      register: token_output
+
+    - debug: var=token_output.json
+
+    - set_fact: nullback="{{ token_output.json.subtotal }}"
+    - debug: var=nullback
+
+    - name: "test"
+      fail: msg="NO HOSTS FOUNDS"
+      when: (nullback == "0")
+
+    - set_fact: first_mac="{{ token_output.json.results[0].name }}"
+
+    - debug: var=first_mac
+
+    - set_fact: host_group_name2="{{ 'CentOS 7 via Kickstart/PXE' | regex_replace('\s', '%20') }}"
+
+    - debug: var=host_group_name2
+
+    - set_fact: host_group_search_url="{{ host_group_search_url }}?search=name=%22{{ host_group_name2 }}%22"
+
+    - debug: var=host_group_search_url
+
+    - name: Call to Satellite to find a host group that matches host_group_name from dialog
+      uri:
+        url: "{{ host_group_search_url }}"
+        user: "{{ satellite_user }}"
+        password: "{{ satellite_password }}"
+        force_basic_auth: yes
+        method: GET
+        validate_certs: no
+        headers:
+           Content-Type: "application/json"
+        HEADER_Content-Type: "application/json"
+        return_content: yes
+      register: token_output
+
+    - debug: var=token_output.json
+
+    - set_fact: host_group_id="{{ token_output.json.results[0].id }}"
+
+    - debug: var=host_group_id
+
+    - name: Call to Satellite to Provision Discovered Host to Host Group
+      uri:
+        url: "{{ discovered_hosts }}/{{ first_mac }}"
+        method: PUT
+        user: "{{ satellite_user }}"
+        password: "{{ satellite_password }}"
+        force_basic_auth: yes
+        validate_certs: no
+        headers:
+           Content-Type: "application/json"
+        HEADER_Content-Type: "application/json"
+        body_format: json
+        body: 
+          discovered_host: 
+             hostgroup_id: '{{ host_group_id }}'
+          apiv: 'v2'
+          id: '{{ first_mac }}'
+        return_content: yes
+      register: token_output
+
+    - debug: var=token_output.json
+
+

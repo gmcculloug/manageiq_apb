@@ -1,0 +1,61 @@
+---
+version: 1.0
+name: satellite-apb
+description: Physical Server Request
+bindable: false
+async: optional
+metadata:
+  displayName: Physical Server Request
+  imageUrl: "https://s3.amazonaws.com/summitdemojh/3510779b.jpeg"
+plans:
+- name: default
+  description: Custom plan for physical server request by cpu, memory and disk.
+  free: true
+  metadata: {}
+  parameters:
+  - title: Satellite Requester
+    name: satellite_user
+    type: string
+    required: true
+    default: 'admin'
+    display_group: Satellite Credentials
+  - title: Satellite Password
+    name: satellite_password
+    type: string
+    display_type: password
+    default: 'password'
+    required: true
+    display_group: Satellite Credentials
+  - name: min_disks_size
+    title: Minimum Disk Size (MB)
+    default: 10000
+    display_group: Physical Requirements
+    type: integer
+    required: false
+  - name: min_memory
+    title: Minimum Memory (MB)
+    default: 500
+    display_group: Physical Requirements
+    type: integer
+    required: false
+  - name: min_cpu
+    title:  Number of CPUs
+    default: ''
+    display_group: Physical Requirements
+    type: integer
+    required: true
+  - name: server_name
+    title: Server Name
+    default: ''
+    display_group: Provision Detail
+    type: string
+    required: true
+  - name: host_group_name
+    title: Host Group Name
+    default: 'CentOS 7 via Kickstart/PXE'
+    display_group: Provision Detail
+    type: string
+    required: true
+
+
+    

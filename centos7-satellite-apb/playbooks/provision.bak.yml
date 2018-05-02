@@ -1,0 +1,7 @@
+- name: centos7-satellite-apb playbook to provision the application
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  roles:
+  - role: provision-centos7-satellite-apb
+    playbook_debug: false
