@@ -18,17 +18,6 @@ plans:
     longDescription: This is a sample plan
     cost: 0.0
   parameters:
-  - title: CFME Requester
-    name: cfme_user
-    type: string
-    required: true
-    display_group: CloudForms Credentials
-  - title: CFME Password
-    name: cfme_password
-    type: string
-    display_type: password
-    required: true
-    display_group: CloudForms Credentials
   - name: text_box_1
     title: Database Username
     default: mysqladmin

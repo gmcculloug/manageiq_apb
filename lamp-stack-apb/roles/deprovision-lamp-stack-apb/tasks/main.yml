@@ -1,4 +1,5 @@
 ---
+- include_tasks: credentials.yml
 - name: Fetch the Service URL
   k8s_v1_config_map:
     namespace: "{{ namespace }}"
@@ -8,8 +9,8 @@
 - name: CloudForms Retirement Task
   uri:
     url: "{{ manageiq.api_url }}/services"
-    user: "{{ config.config_map.data.cfmeUser }}"
-    password: "{{ config.config_map.data.cfmePassword }}"
+    user: "{{ cloudforms_cred.secret.data.username | b64decode }}"
+    password: "{{ cloudforms_cred.secret.data.password | b64decode }}"
     force_basic_auth: true
     method: POST
     validate_certs: false

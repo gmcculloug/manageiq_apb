@@ -19,54 +19,41 @@ plans:
     cost: 9.99
   parameters:
   - &1
-    title: CFME Requester
-    name: cfme_user
-    type: string
-    required: true
-    display_group: CloudForms Credentials
-  - &2
-    title: CFME Password
-    name: cfme_password
-    type: string
-    display_type: password
-    required: true
-    display_group: CloudForms Credentials
-  - &3
     name: text_box_1
     title: Job Tracker Name
     default: dfs.namenode.name.dir
     display_group: Info/Job Tracker
     type: string
     required: false
-  - &4
+  - &2
     name: check_box_1
     title: Use YARN
     default: true
     display_group: Info/Job Tracker
     type: boolean
     required: false
-  - &5
+  - &3
     name: text_box_2
     title: Name Prefix
     default: dfs.datanode[x].data.dir
     display_group: Info/Data Node(s)
     type: string
     required: false
-  - &6
+  - &4
     name: text_box_3
     title: Resource Memory MB
     default: '1536'
     display_group: Info/Data Node(s)
     type: string
     required: false
-  - &7
+  - &5
     name: text_box_4
     title: Scheduler Minimum Allocation MB
     default: '128'
     display_group: Info/Data Node(s)
     type: string
     required: false
-  - &8
+  - &6
     name: text_box_5_1
     title: Scheduler Maximum Allocation MB
     default: '1536'
@@ -87,8 +74,6 @@ plans:
   - *4
   - *5
   - *6
-  - *7
-  - *8
 - name: silver
   description: Silver Plan
   free: false
@@ -103,8 +88,6 @@ plans:
   - *4
   - *5
   - *6
-  - *7
-  - *8
 - name: custom
   description: Custom Plan
   free: false
@@ -115,8 +98,6 @@ plans:
   parameters:
   - *1
   - *2
-  - *3
-  - *4
   - name: option_0_number_of_vms
     title: Data Node Count
     default: 3
@@ -133,7 +114,7 @@ plans:
     - '6'
     - '7'
     - '8'
+  - *3
+  - *4
   - *5
   - *6
-  - *7
-  - *8

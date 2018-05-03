@@ -3,12 +3,13 @@
 - name: Load a variable file based on the selected plan
   include_vars:
     file: "{{ _apb_plan_id }}.yml"
+- include_tasks: credentials.yml
 - include_tasks: approval.yml
 - name: CloudForms Provisioning Task
   uri:
     url: "{{ manageiq.service_catalog_href }}"
-    user: "{{ cfme_user }}"
-    password: "{{ cfme_password }}"
+    user: "{{ cloudforms_cred.secret.data.username | b64decode }}"
+    password: "{{ cloudforms_cred.secret.data.password | b64decode }}"
     force_basic_auth: true
     method: POST
     validate_certs: false
@@ -40,8 +41,8 @@
   uri:
     url: "{{ request_url }}"
     method: GET
-    user: "{{ cfme_user }}"
-    password: "{{ cfme_password }}"
+    user: "{{ cloudforms_cred.secret.data.username | b64decode }}"
+    password: "{{ cloudforms_cred.secret.data.password | b64decode }}"
     force_basic_auth: true
     validate_certs: false
     headers:
@@ -66,8 +67,8 @@
 - name: CloudForms Service Request Task
   uri:
     url: "{{ service_request_task_url }}"
-    user: "{{ cfme_user }}"
-    password: "{{ cfme_password }}"
+    user: "{{ cloudforms_cred.secret.data.username | b64decode }}"
+    password: "{{ cloudforms_cred.secret.data.password | b64decode }}"
     force_basic_auth: true
     method: GET
     validate_certs: false
@@ -90,8 +91,6 @@
     name: "{{_apb_service_instance_id }}"
     data:
       cfmeServiceHref: "{{ service_url }}"
-      cfmeUser: "{{ cfme_user }}"
-      cfmePassword: "{{ cfme_password }}"
 - name: set the console service_url
   set_fact:
     dashboard_service_url: "{{ manageiq.cfme_console_url }}/service/show/{{ request_task_output.json.resources[0].destination_id

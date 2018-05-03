@@ -33,6 +33,7 @@ class ActionModule(ActionBase):
                     result['failed'] = False
                     return result
                 elif 'approval_status' in status_data and status_data['approval_status'] == 'Denied':
+                    self.create_error_message("Request has been denied")
                     result['failed'] = True
                     return result
 
@@ -41,3 +42,8 @@ class ActionModule(ActionBase):
 
         result['failed'] = True
         return result
+
+    def create_error_message(self, error_string):
+        file = open("/dev/termination-log","w")
+        file.write(error_string)
+        file.close()

@@ -18,6 +18,9 @@
 - debug: msg="Services All {{ services_all }}"
 
 - debug: msg="Service Class {{ serviceclass.stdout }}"
+- set_fact:
+    username: "{{ _apb_last_requesting_user }}"
+    project: "{{ namespace }}"
 
 - name: "pull username from service instance id {{ _apb_service_instance_id }}"
   with_items: "{{ services_all }}"
@@ -106,6 +109,7 @@
       requested_budget: "{{ requested_budget }}"
       requested_storage_gb: "{{ requested_storage_gb }}"
       service_name: "{{ manageiq.service_name }}"
+      project: "{{ namespace }}"
 
 - name: Build the payload to be sent to BPMS
   set_fact: 
