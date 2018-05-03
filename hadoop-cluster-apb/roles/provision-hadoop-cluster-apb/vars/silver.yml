@@ -5,6 +5,6 @@ plan_long_description: This is the Silver Plan - 3 Data Nodes, 1 Job Tracker
 plan_display_name: This is the Silver Plan - 3 Data Nodes, 1 Job Tracker
 plan_cost: 1.99
 option_0_cores_per_socket: 2
-option_0_number_of_vms: 4
+option_0_number_of_vms: '4'
 option_0_vm_memory: 4
 option_0_number_of_sockets: 1
