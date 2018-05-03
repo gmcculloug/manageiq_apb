@@ -5,6 +5,6 @@ plan_long_description: This is the Gold Plan - 5 Data Nodes, 1 Job Tracker
 plan_display_name: This is the Gold Plan - 5 Data Nodes, 1 Job Tracker
 plan_cost: 5.99
 option_0_cores_per_socket: 2
-option_0_number_of_vms: 6
+option_0_number_of_vms: '6'
 option_0_vm_memory: 2
 option_0_number_of_sockets: 1
