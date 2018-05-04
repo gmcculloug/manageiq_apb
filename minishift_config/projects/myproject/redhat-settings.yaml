@@ -6,9 +6,4 @@ data:
     \nmax_retries: 60\nretry_interval: 10\ncfme_ssl_verify: false\n"
 kind: ConfigMap
 metadata:
-  creationTimestamp: 2018-05-04T17:34:15Z
   name: redhat-settings
-  namespace: myproject
-  resourceVersion: "10586"
-  selfLink: /api/v1/namespaces/myproject/configmaps/redhat-settings
-  uid: 5dd9e11e-4fc1-11e8-843e-ce30c43ff8fd

@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  password: dUJKckpEMyE=
+  username: a2llc2VydmVy
+kind: Secret
+metadata:
+  name: bpm
+type: kubernetes.io/basic-auth

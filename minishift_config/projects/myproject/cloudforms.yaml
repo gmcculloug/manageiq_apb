@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  password: c21hcnR2bQ==
+  username: YWRtaW4=
+kind: Secret
+metadata:
+  name: cloudforms
+type: kubernetes.io/basic-auth

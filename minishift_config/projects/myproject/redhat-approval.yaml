@@ -17,9 +17,4 @@ data:
     quota_approver_status: Pending
 kind: ConfigMap
 metadata:
-  creationTimestamp: 2018-05-04T17:34:15Z
   name: redhat-approval
-  namespace: myproject
-  resourceVersion: "1825"
-  selfLink: /api/v1/namespaces/myproject/configmaps/redhat-approval
-  uid: 5df3ba3c-4fc1-11e8-843e-ce30c43ff8fd

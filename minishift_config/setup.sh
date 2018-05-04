@@ -18,7 +18,7 @@ minishift addons install ~/work/Summit/minishift-addons/add-ons/ansible-service-
 sleep 10
 minishift addons apply ansible-service-broker
 
-oc create -f ./projects/myproject
+oc create -f "$(dirname "$0")/projects/myproject"
 
 # oc login -u system:admin
 # oc label namespace myproject permissions=Requires-Approval
@@ -26,4 +26,4 @@ oc create -f ./projects/myproject
 # oc edit oauthclient openshift-web-console
 # oc login -u developer -p dev
 
-# minishift console
+minishift console
