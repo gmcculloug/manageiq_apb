@@ -23,7 +23,7 @@
         href: "{{ config.config_map.data.cfmeServiceHref }}"
     return_content: true
   register: output
-- debug: var=output
+  when: config.config_map.data.cfmeServiceHref is defined
 - name: Fetch the Quota Config Map
   k8s_v1_config_map:
     namespace: "{{ namespace }}"
@@ -38,9 +38,10 @@
     namespace: "{{ namespace }}"
     name: "{{_apb_service_instance_id }}-status"
   register: redhat_status
-- debug: var=redhat_status
+  when: config.config_map.data.cfmeServiceHref is defined
 - set_fact:
     svc_status: "{{ redhat_status.config_map.data.status | from_yaml }}"
+  when: config.config_map.data.cfmeServiceHref is defined
 - name: Create the Updated Quota after retirement has been queued
   set_fact:
     updated_quota:
@@ -57,12 +58,14 @@
       used_storage_gb: "{{ (quota.used_storage_gb|int - svc_status.requested_storage_gb|int)
         | int }}"
       used_vms: "{{ (quota.used_vms|int - svc_status.requested_vms|int) | int }}"
+  when: config.config_map.data.cfmeServiceHref is defined
 - name: Save the updated quota
   k8s_v1_config_map:
     namespace: "{{ namespace }}"
     name: redhat-quota
     data:
       quota: "{{ updated_quota | to_nice_yaml }}"
+  when: config.config_map.data.cfmeServiceHref is defined
 - name: Delete the Config Map
   k8s_v1_config_map:
     namespace: "{{ namespace }}"
