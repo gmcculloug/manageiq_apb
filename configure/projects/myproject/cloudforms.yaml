@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  password: c21hcnR2bQ==
+  username: YWRtaW4=
+kind: Secret
+metadata:
+  creationTimestamp: 2018-05-04T18:56:01Z
+  name: cloudforms
+  namespace: myproject
+  resourceVersion: "9517"
+  selfLink: /api/v1/namespaces/myproject/secrets/cloudforms
+  uid: ca1b4af2-4fcc-11e8-85df-ce30c43ff8fd
+type: kubernetes.io/basic-auth

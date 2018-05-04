@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+  approval: |
+    num_approvers: '2'
+    approver_1_url: https://hooks.slack.com/services/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
+    approver_1_name: April
+    approver_1_status: Pending
+    approver_1_initiated_at: ''
+    approver_1_approved_at: ''
+    approver_2_url: https://hooks.slack.com/services/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
+    approver_2_name: May
+    approver_2_status: Pending
+    approver_2_initiated_at: ''
+    approver_2_approved_at: ''
+    quota_approver_url: https://hooks.slack.com/services/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
+    quota_approver_name: June
+    quota_approver_status: Pending
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2018-05-04T17:34:15Z
+  name: redhat-approval
+  namespace: myproject
+  resourceVersion: "1825"
+  selfLink: /api/v1/namespaces/myproject/configmaps/redhat-approval
+  uid: 5df3ba3c-4fc1-11e8-843e-ce30c43ff8fd

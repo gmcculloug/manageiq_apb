@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  quota: |
+    allocated_budget: '100.0'
+    allocated_cpus: '20'
+    allocated_memory_gb: '50'
+    allocated_storage_gb: '1000'
+    allocated_vms: '10'
+    used_budget: '0.0'
+    used_cpus: '0'
+    used_memory_gb: '0'
+    used_storage_gb: '0'
+    used_vms: '0'
+kind: ConfigMap
+metadata:
+  creationTimestamp: 2018-05-04T17:34:15Z
+  name: redhat-quota
+  namespace: myproject
+  resourceVersion: "1822"
+  selfLink: /api/v1/namespaces/myproject/configmaps/redhat-quota
+  uid: 5dc12149-4fc1-11e8-843e-ce30c43ff8fd
