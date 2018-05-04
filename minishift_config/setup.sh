@@ -20,7 +20,11 @@ minishift addons apply ansible-service-broker
 
 oc create -f "$(dirname "$0")/projects"
 
-# oc login -u system:admin
+oc login -u system:admin
+oc adm policy add-cluster-role-to-user cluster-admin developer
+oc login -u developer -p smartvm
+
+# oc label user/developer permissions=Requires-Approval
 # oc label namespace myproject permissions=Requires-Approval
 # oc describe namespace myproject
 # oc edit oauthclient openshift-web-console
