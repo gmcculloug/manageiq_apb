@@ -1,57 +1,3 @@
-
-- name: preliminary login information with account that can see everything
-  raw: "oc login -u developer -p asd && oc project {{ namespace }}"
-
-- name: list service instances
-  raw: oc get serviceinstances -o json
-  register: serviceinstances
-
-  # We need to rename the returned item as a generic list since oc is returning a
-  #   reserved key of 'items'
-- set_fact:
-    services_all: "{{ (serviceinstances.stdout | from_json)['items'] }}"
-
-- name: "get serviceclass labels for {{ _apb_service_class_id }}"
-  raw: "oc get clusterserviceclass {{ _apb_service_class_id }} -o json"
-  register: serviceclass
-
-- debug: msg="Services All {{ services_all }}"
-
-- debug: msg="Service Class {{ serviceclass.stdout }}"
-- set_fact:
-    username: "{{ _apb_last_requesting_user }}"
-    project: "{{ namespace }}"
-
-- name: "pull username from service instance id {{ _apb_service_instance_id }}"
-  with_items: "{{ services_all }}"
-  set_fact:
-    username: "{{ item.spec.userInfo.username }}"
-    project: "{{ item.metadata.namespace }}"
-  when: item.spec.externalID == _apb_service_instance_id
-
-- debug: msg="Username- {{ username }} Project - {{ project }}"
-
-- name: "dump oc project {{ project }}"
-  raw: "oc get project {{ project }} -o json"
-  register: project_json
-
-- name: "dump oc user {{ username }}"
-  raw: "oc get user {{ username }} -o json"
-  register: username_json
-
-- set_fact:
-    service_class_labels: "{{ (serviceclass.stdout | from_json).metadata.labels | default('No Labels') }}"
-    project_labels: "{{ (project_json.stdout | from_json).metadata.labels | default('No Labels') }}"
-    username_labels: "{{ (username_json.stdout | from_json).metadata.labels | default('No Labels') }}"
-    username_name: "{{ (username_json.stdout | from_json).metadata.name | default('No Name') }}"
-    service_class_name: "{{ (serviceclass.stdout | from_json).spec.externalMetadata.displayName | default('No Name') }}"
-
-- debug: msg="Service Class Labels for {{ (serviceclass.stdout | from_json).metadata.name}} {{ service_class_labels }}"
-- debug: msg="Project Labels for {{ (project_json.stdout | from_json).metadata.name }} {{ project_labels }}"
-- debug: msg="Username Labels for {{ (username_json.stdout | from_json).metadata.name}} {{ username_labels }}"
-- debug: msg="Username Name for {{ (username_json.stdout | from_json).metadata.name}} {{ username_name }}"
-- debug: msg="Service Class Name for {{ (serviceclass.stdout | from_json).metadata.name}} {{ service_class_name }}"
-
 - set_fact:
     requested_cpus: "{{ (option_0_number_of_sockets|default(0)|int)*(option_0_cores_per_socket|default(0)|int) }}"
     requested_memory_gb: "{{ (option_0_number_of_vms|default(0)|int)*(option_0_vm_memory|default(0)|int) }}"
@@ -96,12 +42,12 @@
 - debug: var=settings
 
 - name: Build Extra Info Dictionary
-  set_fact: 
+  set_fact:
     extra_info:
-      user_label: "{{ username_labels.permissions|default('no_label') }}"
-      project_label: "{{ project_labels.permissions|default('no_label') }}"
-      service_label: "{{ service_class_labels.permissions|default('no_label')}}"
-      requester: "{{ (username_json.stdout | from_json).metadata.name }}"
+      user_label: no_label
+      project_label: "{{ approval.project_label | default('no_label') }}"
+      service_label: no_label
+      requester: "{{ _apb_last_requesting_user }}"
       plan_id: "{{_apb_plan_id}}"
       requested_cpus: "{{ requested_cpus }}"
       requested_vms: "{{ requested_vms }}"
@@ -112,7 +58,7 @@
       project: "{{ namespace }}"
 
 - name: Build the payload to be sent to BPMS
-  set_fact: 
+  set_fact:
     bpm_dict: "{{ approval|combine(quota)|combine(extra_info) }}"
 
 - debug: var=bpm_dict
@@ -145,10 +91,10 @@
 
 - debug: msg="Rule instance {{ rule_instance }}"
 
-- name: Monitor BPM and update the config map periodically 
-  bpm_monitor: 
-    namespace: "{{ namespace }}" 
-    name: "{{_apb_service_instance_id }}-status" 
+- name: Monitor BPM and update the config map periodically
+  bpm_monitor:
+    namespace: "{{ namespace }}"
+    name: "{{_apb_service_instance_id }}-status"
     retries: "{{ settings.max_retries }}"
     delay: "{{ settings.retry_interval }}"
     uri:
@@ -170,7 +116,7 @@
 
 - name: Create the Updated Quota after approval has been granted
   set_fact:
-    updated_quota: 
+    updated_quota:
       {
         'allocated_budget': "{{ quota.allocated_budget }}",
         'allocated_cpus': "{{ quota.allocated_cpus }}",
