@@ -2,18 +2,18 @@ apiVersion: v1
 data:
   approval: |
     num_approvers: '2'
-    approver_1_url: https://hooks.slack.com/services/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
-    approver_1_name: April
+    approver_1_url: https://hooks.slack.com/services/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
+    approver_1_name: IT-Operations (Group)
     approver_1_status: Pending
     approver_1_initiated_at: ''
     approver_1_approved_at: ''
-    approver_2_url: https://hooks.slack.com/services/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
-    approver_2_name: May
+    approver_2_url: https://hooks.slack.com/services/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
+    approver_2_name: Lloyd Garmadon (Private)
     approver_2_status: Pending
     approver_2_initiated_at: ''
     approver_2_approved_at: ''
-    quota_approver_url: https://hooks.slack.com/services/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
-    quota_approver_name: June
+    quota_approver_url: https://hooks.slack.com/services/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
+    quota_approver_name: Thomas Anderson (Finance)
     quota_approver_status: Pending
     project_label: Requires-Approval
 kind: ConfigMap
