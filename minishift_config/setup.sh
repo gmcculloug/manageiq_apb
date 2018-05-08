@@ -37,7 +37,9 @@ cd ../..
 minishift addons install "$MINISHIFT_CONFIG_DIR/minishift-addons/add-ons/ansible-service-broker/"
 sleep 10
 minishift addons apply ansible-service-broker
-# minishift addons enable ansible-service-broker
+minishift addons enable ansible-service-broker
+
+oc annotate route -n ansible-service-broker asb-1338 --overwrite haproxy.router.openshift.io/timeout=300s
 
 echo "Wait for Ansible Service Broker to start then press the Enter Key to continue installing APBs"
 read
